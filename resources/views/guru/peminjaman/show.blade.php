@@ -18,17 +18,19 @@
                         <h5 class="card-title card-text mb-4">Nama Barang</h5>
                         <h5 class="card-title card-text mb-4">Kode Barang</h5>
                         <h5 class="card-title card-text mb-4">Kategori Barang</h5>
-                        <h5 class="card-title card-text mb-4">Harga Beli Barang</h5>
+                        {{-- <h5 class="card-title card-text mb-4">Harga Beli Produk</h5>
+                        <h5 class="card-title card-text mb-4">Satuan Produk</h5>
                         <h5 class="card-title card-text mb-4">Tanggal Beli</h5>
-                        <h5 class="card-title card-text mb-4">Jumlah Barang</h5>
+                        <h5 class="card-title card-text mb-4">Jumlah Produk</h5> --}}
                     </div>
                     <div class="col-md-4">
                         <h5 class="card-title card-text mb-4">: {{ $produk->nama_produk }}</h5>
                         <h5 class="card-title card-text mb-4">: {{ $produk->kode_produk }}</h5>
                         <h5 class="card-title card-text mb-4">: {{ $produk->kategori->nama_kategori }}</h5>
-                        <h5 class="card-title card-text mb-4">: {{ $Harga ->Beli_Barang }}</h5>
+                        {{-- <h5 class="card-title card-text mb-4">: {{ $format }}</h5>
+                        <h5 class="card-title card-text mb-4">: {{ $produk->satuan_produk }}</h5>
                         <h5 class="card-title card-text mb-4">: {{ $tanggal_beli }}</h5>
-                        <h5 class="card-title card-text mb-4">: {{ $sum }}</h5>
+                        <h5 class="card-title card-text mb-4">: {{ $sum }}</h5> --}}
                     </div>
                 </div>
                 <div class="card-footer">

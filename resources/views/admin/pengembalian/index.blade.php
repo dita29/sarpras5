@@ -7,7 +7,7 @@
         <div class="col">
             <div class="card border-0 shadow rounded">
                 <div class="card-header">
-                    <h4 class="card-title">Peminjaman Produk</h4>
+                    <h4 class="card-title">Peminjaman Barang</h4>
                 </div>
                 <div class="card-body">
                     <form action="#">
@@ -15,7 +15,7 @@
                             <div class="col">
                                 {{-- <a     href="{{ route('peminjaman.create') }}" class="btn btn-success">Tambah Peminjaman</a> --}}
                             </div>
-                            <div class="col-auto">
+                            {{-- <div class="col-auto">
                                 <input type="text" name="keyword" id="keyword" class="form-control"
                                     placeholder="ketik keyword disini">
                             </div>
@@ -23,7 +23,7 @@
                                 <button class="btn btn-primary">
                                     Cari
                                 </button>
-                            </div>
+                            </div> --}}
                         </div>
                     </form>
                 </div>
@@ -35,7 +35,7 @@
                                 <th scope="col">Nama Produk</th>
                                 <th scope="col">Kode Pinjam</th>
                                 <th scope="col">Peminjam</th>
-                                <th scope="col">Jumlah</th>
+                                <th scope="col">Jumlah (pcs)</th>
                                 <th scope="col">Kondisi Kembali</th>
                                 <th scope="col">Tanggal Kembali</th>
                                 <th scope="col">Status</th>

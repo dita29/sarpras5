@@ -1,31 +1,30 @@
 @extends('layouts.master')
 
-@section('tab-title', 'Stok Keluar | Admin')
-@section('page-title', 'Stok Keluar')
+@section('tab-title', 'Riwayat Transaksi Barang | Admin')
+@section('page-title', 'Riwayat Transaksi Barang')
 @section('contents')
     <div class="row">
         <div class="col">
             <div class="card border-0 shadow rounded">
-                <div class="card-header">
+                {{-- <div class="card-header">
                     <h4 class="card-title">Kurangi Stok</h4>
-                </div>
+                </div> --}}
                 <div class="card-body">
                     <form action="#">
                         <div class="row">
                             <div class="col">
-                                <a href="{{ route('stokOut.create') }}" class="btn btn-success">Kurangi Stok</a>
                                 <a href="{{ route('stokOut.export') }}" class="btn btn-warning">Ekspor Excel</a>
                                 <a href="{{ route('stokOut.exportPdf') }}" class="btn btn-warning">Ekspor Pdf</a>
                             </div>
-                            <div class="col-auto">
+                            {{-- <div class="col-auto">
                                 <input type="text" name="keyword" id="keyword" class="form-control"
                                     placeholder="ketik keyword disini">
-                            </div>
-                            <div class="col-auto">
+                            </div> --}}
+                            {{-- <div class="col-auto">
                                 <button class="btn btn-primary">
                                     Cari
                                 </button>
-                            </div>
+                            </div> --}}
                         </div>
                     </form>
                 </div>
@@ -34,12 +33,12 @@
                         <thead>
                             <tr>
                                 <th style="width: 50px">No</th>
-                                <th scope="col">Nama Produk</th>
-                                <th scope="col">Jumlah Produk Keluar</th>
+                                <th scope="col">Nama Barang</th>
+                                <th scope="col">Jumlah Barang Keluar</th>
                                 <th scope="col">Tanggal Keluar</th>
                                 <th scope="col">Pemohon</th>
+                                <th scope="col">Status</th>
                                 <th scope="col">Keterangan</th>
-                                <th style="width: 150px" scope="col">Opsi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -47,25 +46,13 @@
                                 <tr>
                                     <td>{{ $no++ }}</td>
                                     <td>{{ $stokOut->produk->nama_produk }}</td>
-                                    <td>{{ $stokOut->qty }}</td>
+                                    <td>{{ $stokOut->jumlah }}</td>
                                     <td>{{ $stokOut->created_at->isoFormat('dddd, DD MMMM Y') }}</td>
-                                    <td>{{ $stokOut->pemohon }}</td>
-                                    <td>{{ $stokOut->keterangan }}</td>
+                                    <td>{{ $stokOut->peminjam }}</td>
+                                    <td>{{ $stokOut->status }}</td>
+                                    <td>{{ $stokOut->kondisi_kembali }}</td>
                                     <td>
-                                        <div class="row">
-                                            <div class="col-auto">
-                                                <a href="{{ route('stokOut.edit', $stokOut->id) }}"
-                                                    class="btn btn-sm btn-secondary">Edit</a>
-                                            </div>
-                                            <div class="col-auto">
-                                                <form action="{{ route('stokOut.destroy', $stokOut->id) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger btn-flat show-alert-delete-box btn-sm btn-delete">Hapus</button>
-                                                    <div class="row">
-                                                </form>
-                                            </div>
-                                        </div>
+
                                     </td>
                                 </tr>
                             @empty

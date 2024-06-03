@@ -11,30 +11,41 @@
 </head>
 
 <body>
-    <table class="table">
-        <thead class="thead-light">
-            <tr>
-                <th scope="col">No</th>
-                <th scope="col">Nama Produk</th>
-                <th scope="col">Kategori</th>
-                <th scope="col">Total Barang<br>Masuk</th>
-                <th scope="col">Total Barang<br>keluar</th>
-                <th scope="col">Total Barang</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($datas as $data)
+    <div class="container-fluid bg-danger text-center py-2 text-white">Laporan Sisa Stok Barang</div>
+    <div class="container-fluid" style="margin-bottom: 50px">
+        <table class="table">
+            <thead class="thead-light">
                 <tr>
-                    <th scope="row">{{ $loop->iteration }}</th>
-                    <td>{{ $data->nama_produk }}</td>
-                    <td>{{ $data->kategori->nama_kategori }}</td>
-                    <td>{{ $data->stokin->sum('qty') }}</td>
-                    <td>{{ $data->stokout->sum('qty') }}</td>
-                    <td>{{ $data->qty }}</td>
+                    <th scope="col">No</th>
+                    <th scope="col">Nama Barang</th>
+                    <th scope="col">Kategori</th>
+                    <th scope="col">Total Barang</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach ($datas as $data)
+                    <tr>
+                        <th scope="row">{{ $loop->iteration }}</th>
+                        <td>{{ $data->nama_produk }}</td>
+                        <td>{{ $data->kategori->nama_kategori }}</td>
+                        <td>{{ $data->qty }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    <div class="d-flex flex-row-reverse" style="padding-right: 15px; width: 100%;">
+        <div style="margin: 10px; text-align:right">
+             {{ optional(now())->isoFormat('dddd, DD MMMM Y') }}
+        </div>
+        <div style="margin: 10px; text-align:right; margin-bottom: 55px">
+            Administrator Sarana Prasarana
+        </div>
+        <div style="margin: 10px; text-align:right;  padding-right: 25px;">
+            Andri Prasetyo
+        </div>
+    </div>
+
 </body>
 
 </html>

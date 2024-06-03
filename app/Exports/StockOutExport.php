@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\StokOut;
+use App\Models\Pinjam;
 use App\Models\Produk;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -24,22 +24,23 @@ class StockOutExport implements FromCollection, WithMapping, WithHeadings, Shoul
     use Exportable;
 
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     public function collection()
     {
-        return StokOut::with('produk')->get();
+    return Pinjam::with('produk')->get();
     }
 
     public function headings(): array
     {
         return [
             'ID Stok',
-            'Nama Produk',
+            'Nama Barang',
             'Jumlah Produk Keluar',
             'Tanggal Keluar',
             'Pemohon',
-            'Keterangan',
+            'Status',
+            'Keterangan'
         ];
     }
 
@@ -47,10 +48,11 @@ class StockOutExport implements FromCollection, WithMapping, WithHeadings, Shoul
         return [
             $stokOut->id,
             $stokOut->produk->nama_produk,
-            $stokOut->qty,
-            Date::dateTimeToExcel($stokOut->created_at),
-            $stokOut->pemohon,
-            $stokOut->keterangan,
+            $stokOut->jumlah,
+            Date::dateTimeToExcel($stokOut->tgl_pinjam),
+            $stokOut->peminjam,
+            $stokOut->status,
+            $stokOut->kondisi_pinjam,
         ];
     }
 

@@ -7,7 +7,7 @@
         <div class="col-md-5 mb-3">
             <div class="card border-0 shadow rounded">
                 <div class="card-header">
-                    <h3 class="card-title">Kurangi Data Produk</h3>
+                    <h3 class="card-title">Kurangi Data Barang</h3>
                 </div>
                 <form action="{{ route('stokOut.update', $stokOut->id) }}" method="post" enctype="multipart/form-data">
                     @csrf
@@ -33,10 +33,10 @@
                                     @endif
                                 </div>
                                 <div class="form-goup mb-3">
-                                    <label for="produk_id" class="form-label">Nama Produk</label>
+                                    <label for="produk_id" class="form-label">Nama Barang</label>
                                     <select class="form-select @error('produk_id') is-invalid @enderror" id="produk_id"
                                         name="produk_id" autofocus>
-                                        <option value="" selected>Pilih Produk</option>
+                                        <option value="" selected>Pilih Barang</option>
                                         @foreach ($produks as $produk)
                                             <option value="{{ $produk->id }}"
                                                 @if ($stokOut->produk_id == $produk->id) selected @endif>
@@ -46,7 +46,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label for="qty" class="form-label">Jumlah Produk Keluar</label>
+                                    <label for="qty" class="form-label">Jumlah Barang Keluar</label>
                                     <input type="number" id="qty" name="qty" placeholder="min = 1"
                                         class="form-control @error('qty') is-invalid @enderror"
                                         value="{{ old('qty', $stokOut->qty) }}" />

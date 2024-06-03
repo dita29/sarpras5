@@ -7,7 +7,7 @@
         <div class="col-md-5">
             <div class="card border-0 shadow rounded">
                 <div class="card-header">
-                    <h3 class="card-title">Pengembalian Produk</h3>
+                    <h3 class="card-title">Pengembalian Barang</h3>
                 </div>
                 <form action="{{ route('pengembalian.update', $pinjam->id) }}" method="post" enctype="multipart/form-data">
                     @csrf
@@ -32,10 +32,10 @@
                                     @endif
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label for="produk_id" class="form-label">Nama Produk</label>
+                                    <label for="produk_id" class="form-label">Nama Barang</label>
                                     <select name="produk_id" id="produk_id" class="form-select"
                                         @error('produk_id') is-invalid @enderror disabled>
-                                        <option value="" selected>Pilih Produk</option>
+                                        <option value="" selected>Pilih Barang</option>
                                         @foreach ($produks as $produk)
                                             <option value="{{ $produk->id }}" @if ($pinjam->produk_id == $produk->id) selected @endif>{{ $produk->nama_produk }}</option>
                                         @endforeach

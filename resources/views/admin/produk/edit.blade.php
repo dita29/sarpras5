@@ -7,9 +7,9 @@
         <div class="col-md-5">
             <div class="card border-0 shadow rounded">
                 <div class="card-header">
-                    <h3 class="card-title">Edit Data Produk</h3>
+                    <h3 class="card-title">Edit Data Barang</h3>
                 </div>
-                <form action="{{ route('produk.update', $produk->id) }}" method="post" enctype="multipart/form-data">
+                <form action="{{ route('peminjaman.update', $produk->id) }}" method="post" enctype="multipart/form-data">
                     @csrf
                     @method('PATCH')
 
@@ -17,10 +17,50 @@
                         <div class="row">
                             <div class="col">
                                 <div class="form-group mb-3">
-                                    <label for="nama_produk" class="form-label">Nama Produk</label>
+                                    <label for="nama_produk" class="form-label">Nama Barang</label>
                                     <input type="text" id="nama_produk" name="nama_produk"
+                                    readonly
                                         style="text-transform: capitalize"
-                                        value="{{ old('nama_produk', $produk->nama_produk) }}"
+                                        value="{{ $produk->produk->nama_produk }}"
+                                        class="form-control @error('nama_produk') is-invalid @enderror" autofocus />
+                                    @if ($errors->has('nama_produk'))
+                                        <div class="alert alert-danger mt-2">
+                                            <span class="text-danger mt-1">{{ $errors->first('nama_produk') }}</span>
+                                        </div>
+                                    @endif
+                                </div>
+                                {{-- <div class="form-group mb-3">
+                                    <label for="kode_pinjam" class="form-label">Sisa Stok</label>
+                                    <input type="text" id="qty" name="qty"
+                                    readonly
+                                        style="text-transform: capitalize"
+                                        value="{{ $produk->produk_id->qty }}"
+                                        class="form-control @error('qty') is-invalid @enderror" autofocus />
+                                    @if ($errors->has('qty'))
+                                        <div class="alert alert-danger mt-2">
+                                            <span class="text-danger mt-1">{{ $errors->first('qty') }}</span>
+                                        </div>
+                                    @endif
+                                </div> --}}
+                                <div class="form-group mb-3">
+                                    <label for="nama_peminjam" class="form-label">Nama Peminjam</label>
+                                    <input type="text" id="nama_peminjam" name="nama_peminjam"
+                                    readonly
+                                        style="text-transform: capitalize"
+                                        value="{{ $produk->peminjam }}"
+                                        class="form-control @error('nama_peminjam') is-invalid @enderror" autofocus />
+                                    @if ($errors->has('nama_produk'))
+                                        <div class="alert alert-danger mt-2">
+                                            <span class="text-danger mt-1">{{ $errors->first('nama_peminjam') }}</span>
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="nama_produk" class="form-label">Jumlah Barang</label>
+                                    <input type="text" id="nama_produk" name="jumlah_barang"
+                                    readonly
+                                        style="text-transform: capitalize"
+                                        value="{{ $produk->jumlah }}"
                                         class="form-control @error('nama_produk') is-invalid @enderror" autofocus />
                                     @if ($errors->has('nama_produk'))
                                         <div class="alert alert-danger mt-2">
@@ -29,56 +69,29 @@
                                     @endif
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label for="foto_produk" class="form-label">Foto Produk</label>
-                                    <input type="file" id="foto_produk" name="foto_produk"
-                                        class="form-control @error('foto_produk') is-invalid @enderror" />
-                                    @if ($errors->has('foto_produk'))
+                                    <label for="nama_produk" class="form-label">Kondisi Barang</label>
+                                    <input type="text" id="nama_produk" name="kondisi_kembali"
+                                        style="text-transform: capitalize"
+                                        value="{{ $produk->kondisi_kembali }}"
+                                        class="form-control @error('nama_produk') is-invalid @enderror" autofocus />
+                                    @if ($errors->has('nama_produk'))
                                         <div class="alert alert-danger mt-2">
-                                            <span class="text-danger mt-1">{{ $errors->first('foto_produk') }}</span>
+                                            <span class="text-danger mt-1">{{ $errors->first('nama_produk') }}</span>
                                         </div>
                                     @endif
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label for="nama_produk" class="form-label">Gunakan Produk Untuk Dipinjam</label>
+                                    <label for="nama_produk" class="form-label">Status Persetujuan</label>
                                     <div class="row">
                                         <div class="col">
-                                            <input type="radio" id="html" name="pinjam" value="ya"
-                                                {{ $produk->pinjam === 'ya' ? 'checked' : '' }}>
-                                            <label for="html" class="me-3">Ya</label>
-                                            <input type="radio" id="css" name="pinjam" value="tidak"
-                                                {{ $produk->pinjam === 'tidak' ? 'checked' : '' }}>
-                                            <label for="css">Tidak</label>
+                                            <input type="radio" id="html" name="pinjam" value="Disetujui">
+                                            <label for="html" class="me-3">Disetujui</label>
+                                            <input type="radio" id="css" name="pinjam" value="Ditolak">
+                                            <label for="css">Ditolak</label>
+                                            <input type="radio" id="css" name="pinjam" value="Dikembalikan">
+                                            <label for="css">Dikembalikan</label>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="kategori_produk" class="form-label">Kategori Produk</label>
-                                    <select class="form-select @error('kategori_produk') is-invalid @enderror"
-                                        id="kategori_produk" name="kategori_produk" onchange="">
-                                        <option value="" selected>Pilih Kategori</option>
-                                        @foreach ($kategoris as $kategori)
-                                            <option value="{{ $kategori->id }}"
-                                                @if ($produk->kategori_id == $kategori->id) selected @endif>
-                                                {{ $kategori->nama_kategori }}</option>
-                                        @endforeach
-                                    </select>
-                                    @if ($errors->has('kategori_produk'))
-                                        <div class="alert alert-danger mt-2">
-                                            <span class="text-danger mt-1">{{ $errors->first('kategori_produk') }}</span>
-                                        </div>
-                                    @endif
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="kode_produk" class="form-label">Kode Produk</label>
-                                    <input type="text" id="kode_produk" name="kode_produk"
-                                        style="text-transform: uppercase"
-                                        class="form-control @error('kode_produk') is-invalid @enderror"
-                                        value="{{ old('kode_produk', $produk->kode_produk) }}" />
-                                    @if ($errors->has('kode_produk'))
-                                        <div class="alert alert-danger mt-2">
-                                            <span class="text-danger mt-1">{{ $errors->first('kode_produk') }}</span>
-                                        </div>
-                                    @endif
                                 </div>
                             </div>
                         </div>

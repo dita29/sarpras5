@@ -17,15 +17,15 @@
                                 <a href="{{ route('stokIn.export') }}" class="btn btn-warning ms-2">Export Excel</a>
                                 <a href="{{ route('stokIn.exportPdf') }}" class="btn btn-warning ms-2">Export Pdf</a>
                             </div>
-                            <div class="col-auto">
+                            {{-- <div class="col-auto">
                                 <input type="text" name="keyword" id="keyword" class="form-control"
                                     placeholder="ketik keyword disini">
-                            </div>
-                            <div class="col-auto">
+                            </div> --}}
+                            {{-- <div class="col-auto">
                                 <button class="btn btn-primary">
                                     Cari
                                 </button>
-                            </div>
+                            </div> --}}
                         </div>
                     </form>
                 </div>
@@ -34,12 +34,12 @@
                         <thead>
                             <tr>
                                 <th style="width: 50px">No</th>
-                                <th scope="col">Nama Produk</th>
+                                <th scope="col">Nama Barang</th>
                                 <th scope="col">Penempatan</th>
                                 <th scope="col">Merk</th>
                                 <th scope="col">Harga Beli</th>
                                 <th scope="col">Tanggal Beli</th>
-                                <th scope="col">Jumlah Produk Masuk</th>
+                                <th scope="col">Jumlah Barang Masuk</th>
                                 <th style="width: 150px" scope="col">Opsi</th>
                             </tr>
                         </thead>

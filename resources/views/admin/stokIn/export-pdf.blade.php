@@ -17,24 +17,22 @@
                 <th scope="col">No</th>
                 <th scope="col">Nama Barang</th>
                 <th scope="col">Penempatan</th>
-                <th scope="col">Merek</th>
-                <th scope="col">Harga Beli</th>
-                <th scope="col">Tanggal Beli</th>
-                <th scope="col">Jumlah Barang<br>Masuk</th>
-                <th scope="col">Tanggal Barang<br>Masuk</th>
+                <th scope="col">Merk</th>
+                <th scope="col">Harga</th>
+                <th scope="col">Tanggal Barang</th>
+                <th scope="col">Jumlah Barang Masuk</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($datas as $data)
                 <tr>
                     <th scope="row">{{ $loop->iteration }}</th>
-                    <td>{{ $data->produk->nama_produk }}</td>
+                    <td>{{ $data->produk->nama_produk}}</td>
                     <td>{{ $data->tempat->nama_tempat }}</td>
                     <td>{{ $data->merk }}</td>
-                    <td>{{ $data->harga_beli }}</td>
-                    <td>{{ optional($data->tgl_beli)->isoFormat('dddd, DD MMMM Y') }}</td>
-                    <td>{{ $data->qty }}</td>
-                    <td>{{ optional($data->created_at)->isoFormat('dddd, DD MMMM Y') }}</td>
+                    <td>{{ $data->harga_beli}}</td>
+                    <td>{{ optional($data->tgl_beli)->isoFormat('dddd, DD MMMM Y')}}</td>
+                    <td>{{ $data->qty}}</td>
                 </tr>
             @endforeach
         </tbody>

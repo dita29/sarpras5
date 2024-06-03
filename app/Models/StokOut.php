@@ -10,7 +10,7 @@ class StokOut extends Model
     use HasFactory;
 
     protected $fillable = [
-        'produk_id', 'qty', 'pemohon', 'keterangan'
+        'nama_produk', 'qty', 'pemohon', 'keterangan'
     ];
 
     function produk() {

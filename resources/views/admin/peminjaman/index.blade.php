@@ -1,29 +1,27 @@
 @extends('layouts.master')
 
-@section('tab-title', 'Peminjaman | Admin')
-@section('page-title', 'Peminjaman')
+@section('tab-title', 'Produk | Admin')
+@section('page-title', 'Produk')
 @section('contents')
     <div class="row">
         <div class="col">
             <div class="card border-0 shadow rounded">
                 <div class="card-header">
-                    <h4 class="card-title">Peminjaman Produk</h4>
+                    <h4 class="card-title">Daftar Peminjaman</h4>
                 </div>
                 <div class="card-body">
                     <form action="#">
                         <div class="row">
-                            <div class="col">
-                                <a href="{{ route('peminjaman.create') }}" class="btn btn-success">Tambah Peminjaman</a>
-                            </div>
-                            <div class="col-auto">
+
+                            {{-- <div class="col-auto">
                                 <input type="text" name="keyword" id="keyword" class="form-control"
                                     placeholder="ketik keyword disini">
-                            </div>
-                            <div class="col-auto">
+                            </div> --}}
+                            {{-- <div class="col-auto">
                                 <button class="btn btn-primary">
                                     Cari
                                 </button>
-                            </div>
+                            </div> --}}
                         </div>
                     </form>
                 </div>
@@ -31,18 +29,19 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th style="width: 50px">No</th>
-                                <th scope="col">Nama Produk</th>
-                                <th scope="col">Kode Pinjam</th>
-                                <th scope="col">Peminjam</th>
-                                <th scope="col">Jumlah</th>
-                                <th scope="col">Kondisi Pinjam</th>
-                                <th scope="col">Tanggal Pinjam</th>
-                                <th scope="col">Status</th>
-                                <th style="width: 150px" scope="col">Opsi</th>
+                                <th>No</th>
+                                <th>Kode</th>
+                                <th>Produk</th>
+                                <th>Peminjam</th>
+                                <th>Jumlah (pcs)</th>
+                                <th>Kondisi Pinjam</th>
+                                <th>Kondisi Kembali</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
+                            <?php $no=1 ?>
                             @forelse ($pinjams as $pinjam)
                                 <tr>
                                     <td>{{ $no++ }}</td>
@@ -51,7 +50,7 @@
                                     <td>{{ $pinjam->peminjam }}</td>
                                     <td>{{ $pinjam->jumlah }}</td>
                                     <td>{{ $pinjam->kondisi_pinjam }}</td>
-                                    <td>{{ $pinjam->tgl_pinjam->isoFormat('dddd, DD MMMM Y') }}</td>
+                                    <td>{{ $pinjam->kondisi_kembali }}</td>
                                     <td>{{ $pinjam->status }}</td>
                                     <td>
                                         <form action="{{ route('peminjaman.destroy', $pinjam->id) }}" method="POST">
@@ -65,7 +64,7 @@
                                 </tr>
                             @empty
                                 <div class="alert alert-danger">
-                                    Data Peminjaman Belum Tersedia.
+                                    Barang belum Tersedia.
                                 </div>
                             @endforelse
                         </tbody>
@@ -75,7 +74,7 @@
             </div>
         </div>
         <div class="d-flex mt-2">
-            {!! $pinjams->links() !!}
+            {{-- {!! $pinjams->links() !!} --}}
         </div>
     </div>
     <script>

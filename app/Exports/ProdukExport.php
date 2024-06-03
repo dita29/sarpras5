@@ -29,9 +29,7 @@ class ProdukExport implements FromCollection, WithMapping, WithHeadings, ShouldA
             'ID Barang',
             'Nama Barang',
             'Kategori',
-            'Total Barang Masuk',
-            'Total Barang Keluar',
-            'Total Stok Barang'
+            'Sisa Barang'
         ];
     }
 
@@ -40,9 +38,7 @@ class ProdukExport implements FromCollection, WithMapping, WithHeadings, ShouldA
             $produk->id,
             $produk->nama_produk,
             $produk->kategori->nama_kategori,
-            $produk->stokin->sum('qty'),
-            $produk->stokout->sum('qty'),
-            $produk->sum('qty')
+            $produk->qty,
         ];
     }
 }

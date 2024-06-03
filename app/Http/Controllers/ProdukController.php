@@ -56,7 +56,7 @@ class ProdukController extends Controller
 
         if($request->file('foto_produk')){
             $img_name = time() . '_' . Str::title($request->nama_produk) . '.' . $request->foto_produk->extension();
-            $request->foto_produk->storeAs('produk/', $img_name);
+            $request->foto_produk->storeAs('public/produk/', $img_name);
             $produk['foto_produk'] = $img_name;
         }
 
@@ -100,7 +100,7 @@ class ProdukController extends Controller
         $produk = Produk::findOrFail($id);
 
         $kategoris = Kategori::orderBy('nama_kategori')->get();
-        return view('admin.produk.edit', compact('produk', 'kategoris'));
+        return view('new', compact('produk', 'kategoris'));
 
         // dd($produk);
     }
@@ -141,7 +141,7 @@ class ProdukController extends Controller
         if ($request->hasFile('foto_produk')) {
 
             $img_name = time() . '_' . $request->nama_produk . '.' . $request->foto_produk->extension();
-            $request->foto_produk->storeAs('produk/', $img_name);
+            $request->foto_produk->storeAs('public/produk/', $img_name);
 
             Storage::delete('produk/' . $produk->foto_produk);
 
@@ -173,7 +173,7 @@ class ProdukController extends Controller
     public function destroy($id)
     {
         $produk = Produk::findOrFail($id);
-        Storage::delete('produk/' . $produk->foto_produk);
+        Storage::delete('public/produk/' . $produk->foto_produk);
         $produk->delete();
 
 
@@ -183,16 +183,17 @@ class ProdukController extends Controller
 
     public function exportExcel()
     {
-        return Excel::download(new DetailProdukExport, 'detail_produk.xlsx');
+        $title = Carbon::now()->formatLocalized('%d %B %Y');
+        return Excel::download(new DetailProdukExport, "Data Pembelian {$title}.xlsx");
         // return (new StockExport ($this->selected))->download('barang_masuk.xlsx');
     }
 
-    // public function exportPdf()
-    // {
-    //     $datas = StokIn::all();
-    //     view()->share('datas', $datas);
-    //     $pdf = PDF::loadview('admin.stokIn.export-pdf');
-    //     return $pdf->download('barang_masuk.pdf');
-    //     // return view('admin.stokIn.export-pdf', compact('datas'))->with('no', 1);
-    // }
+    public function exportPdf()
+    {
+        $datas = Produk::all();
+        view()->share('datas', $datas);
+        $pdf = PDF::loadview('admin.stokIn.export-pdf');
+        return $pdf->download('barang_masuk.pdf');
+        return view('admin.stokIn.export-pdf', compact('datas'))->with('no', 1);
+    }
 }

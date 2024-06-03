@@ -157,7 +157,7 @@
                         <div class="col"></div>
                         <div class="col"></div>
                         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-success btn-sm">Save changes</button>
+                        <button type="submit" class="btn btn-success btn-sm">Save changes</button>
                     </div>
                 </form>
             </div>
@@ -198,7 +198,7 @@
                                 </tr>
                             @empty
                                 <div class="alert alert-danger">
-                                    Produk belum Tersedia.
+                                    Barang belum Tersedia.
                                 </div>
                             @endforelse
                         </tbody>

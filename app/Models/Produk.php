@@ -9,6 +9,8 @@ class Produk extends Model
 {
     use HasFactory;
 
+    protected $table = 'produks';
+
     protected $fillable = [
         'nama_produk', 'kode_produk', 'kategori_id', 'harga_produk', 'pinjam', 'qty', 'foto_produk'
     ];
@@ -23,7 +25,7 @@ class Produk extends Model
     }
 
     function stokout(){
-        return $this->hasMany(StokOut::class);
+        return $this->hasMany(Pinjam::class);
     }
     public function pinjam() {
         return $this->hasMany(Pinjam::class);

@@ -20,7 +20,7 @@ class DetailProdukExport implements FromCollection, WithMapping, WithHeadings, S
     */
     public function collection()
     {
-        return Produk::with('stokout')->get();
+        return Produk::all();
     }
 
     public function headings(): array
@@ -29,9 +29,7 @@ class DetailProdukExport implements FromCollection, WithMapping, WithHeadings, S
             'ID Barang',
             'Nama Barang',
             'Kode Barang',
-            'Kategori',
-            'Tempat',
-            'Total Barang'
+            'Kategori'
         ];
     }
 
@@ -41,8 +39,6 @@ class DetailProdukExport implements FromCollection, WithMapping, WithHeadings, S
             $produk->nama_produk,
             $produk->kode_produk,
             $produk->kategori->nama_kategori,
-            $produk->stokin->tempat->nama_tempat,
-            $produk->sum('qty')
         ];
     }
 }

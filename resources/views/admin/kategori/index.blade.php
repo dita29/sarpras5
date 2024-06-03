@@ -15,15 +15,15 @@
                             <div class="col">
                                 <a href="{{ route('kategori.create') }}" class="btn btn-success">Tambah Kategori</a>
                             </div>
-                            <div class="col-auto">
+                            {{-- <div class="col-auto">
                                 <input type="text" name="keyword" class="form-control"
                                     placeholder="ketik keyword disini">
-                            </div>
-                            <div class="col-auto">
+                            </div> --}}
+                            {{-- <div class="col-auto">
                                 <button class="btn btn-primary">
                                     Cari
                                 </button>
-                            </div>
+                            </div> --}}
                         </div>
                     </form>
                 </div>
@@ -46,7 +46,7 @@
                                     <td>
                                         <form action="{{ route('kategori.destroy', $data->id) }}" method="POST">
                                             <a href="{{ route('kategori.edit', $data->id) }}"
-                                                class="btn btn-sm btn-primary">Ubah</a>
+                                                class="btn btn-sm btn-primary">Edit</a>
                                             @csrf
                                             @method('DELETE')
                                             {{-- <button type="submit" class="btn btn-sm btn-danger">Hapus</button> --}}

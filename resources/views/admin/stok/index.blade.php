@@ -17,15 +17,15 @@
                                 <a href="{{ route('stok.exportPdf') }}" class="btn btn-warning" class="btn btn-warning">Export Pdf</a>
                                 {{-- <a href="{{ route('kategori.create') }}" class="btn btn-success">Tambah Kategori</a> --}}
                             </div>
-                            <div class="col-auto">
+                            {{-- <div class="col-auto">
                                 <input type="text" name="keyword" class="form-control"
                                     placeholder="ketik keyword disini">
-                            </div>
-                            <div class="col-auto">
+                            </div> --}}
+                            {{-- <div class="col-auto">
                                 <button class="btn btn-primary">
                                     Cari
                                 </button>
-                            </div>
+                            </div> --}}
                         </div>
                     </form>
                 </div>
@@ -35,11 +35,12 @@
                             <thead>
                                 <tr>
                                     <th style="width: 50px">No</th>
-                                    <th scope="col">Nama Produk</th>
+                                    <th scope="col">Nama Barang</th>
                                     <th scope="col">Kategori</th>
-                                    <th scope="col">Total Barang Masuk</th>
+                                    {{-- <th scope="col">Total Barang Masuk</th>
                                     <th scope="col">Total Barang Keluar</th>
-                                    <th scope="col">Total Barang</th>
+                                    <th scope="col">Tanggal Dibuat</th> --}}
+                                    <th scope="col">Sisa Barang</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -48,8 +49,9 @@
                                         <td>{{ $no++ }}</td>
                                         <td>{{ $produk->nama_produk }}</td>
                                         <td>{{ $produk->kategori->nama_kategori }}</td>
-                                        <td>{{ $produk->stokin->sum('qty') }}</td>
-                                        <td>{{ $produk->stokout->sum('qty') }}</td>
+                                        {{-- <td>{{ $produk->stokin->sum('qty'), }}</td>
+                                        <td>{{ $produk->stokout->sum('jumlah') }}</td>
+                                        <td>{{ optional($produk->created_at)->isoFormat('dddd, DD MMMM Y') }}</td> --}}
                                         <td>{{ $produk->qty }}</td>
                                     </tr>
                                 @empty

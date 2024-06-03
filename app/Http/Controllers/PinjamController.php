@@ -2,261 +2,193 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pinjam;
+use App\Models\Kategori;
 use App\Models\Produk;
-use Illuminate\Support\Str;
+use App\Models\Tempat;
+use App\Models\Pinjam;
+use App\Models\StokOut;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\DetailProdukExport;
+use PDF;
 
 class PinjamController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        $pinjams = Pinjam::paginate(10);
-        $produk = Produk::orderBy('nama_produk')->get();
-        return view('admin.peminjaman.index', compact('pinjams', 'produk'))->with('no', 1);
+        $pinjams = Pinjam::all();
+        return view('admin.peminjaman.index', compact('pinjams'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        $produks = Produk::orderBy('kategori_id', 'asc')
-            ->whereIn('pinjam', ['ya'])
-            ->get();
-        return view('admin.peminjaman.create', compact('produks'))->with('no', 1);
+        $tempats = Tempat::select('id', 'nama_tempat')->get();
+        $kategoris = Kategori::select('id', 'nama_kategori')->get();
+        return view('admin.produk.create', compact('kategoris', 'tempats'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
+
         $request->validate(
             [
-                'produk_id' => 'required',
-                'kode_pinjam' => 'required',
-                'peminjam' => 'required',
-                'jumlah' => 'required|min:1',
-                'kondisi_pinjam' => 'required',
-                'tgl_pinjam' => 'required'
+                'nama_produk' => 'unique:produks|required',
+                'kode_produk' => 'unique:produks,kode_produk|required|regex:/^\S*$/u',
+                'kategori_produk' => 'required',
+                'pinjam' => 'required',
+                'foto_produk' => 'image|mimes:jpeg,png,jpg,webp|file|max:2048',
+            ],
+            [
+                'kode_produk.required' => 'Kode produk harus diisi',
+                'kategori_produk' => 'Kategori produk harus diisi',
+                'pinjam.required' => 'harap Dipilih',
+                'nama_produk.unique' => 'Nama produk ini sudah ada',
+                'nama_produk.required' => 'Nama produk harus diisi',
+                'kode_produk.unique' => 'Kode produk ini sudah ada',
+                'kode_produk.regex' => 'Maaf kode produk tidak boleh ada spasi',
+                'foto_produk.image' => 'Format foto produk yang dapat diinputkan adalah jpeg, png, jpg, dan webp',
+                'foto_produk.file.max' => 'Maksimal ukuran foto yang dapat diinputkan adalah 2 Mb'
+                // 'jml_produk' => 'Jumlah produk harus diisi',
             ]
         );
 
-        $produk = Produk::findOrFail($request->produk_id);
-        if($produk->qty <= 0) {
-            toast('Maaf Jumlah '.$produk->nama_produk.' Saat Ini '.$produk->qty, 'error')->autoclose(3000);
-            return redirect()->route('peminjaman.create');
-        } else if($request->jumlah > 1) {
-            return redirect()->route('peminjaman.create')->with('error', 'Maaf Jumlah Produk '.$produk->nama_produk.' Tidak Boleh Lebih Dari 1');
-        } else {
-            $pjm['produk_id'] = $request->input('produk_id');
-            $pjm['kode_pinjam'] = strtoupper($request->input('kode_pinjam'));
-            $pjm['peminjam'] = Str::title($request->input('peminjam'));
-            $pjm['jumlah'] = $request->input('jumlah');
-            $pjm['kondisi_pinjam'] = $request->input('kondisi_pinjam');
-            $pjm['tgl_pinjam'] = $request->input('tgl_pinjam');
-            $st = "Dipinjam";
-            $pjm['status'] = $st;
-
-            Pinjam::create($pjm);
-
-            $produk->qty -= 1;
-            $produk->update();
-
-            if (!$request) {
-                toast('Peminjaman Gagal Disimpan!', 'error')->autoClose(1500);
-                return redirect()->route('peminjaman.create');
-            } else {
-                toast('Peminjaman Berhasil Disimpan', 'success')->autoClose(1500);
-                return redirect()->route('peminjaman.index');
-            }
-
+        if($request->file('foto_produk')){
+            $img_name = time() . '_' . Str::title($request->nama_produk) . '.' . $request->foto_produk->extension();
+            $request->foto_produk->storeAs('public/produk/', $img_name);
+            $produk['foto_produk'] = $img_name;
         }
+
+        $pjm = $request->input('pinjam');
+
+        if ($pjm == 'ya') {
+            $ok = "ya";
+            $produk['pinjam'] = $ok;
+        } elseif ($pjm == 'tidak') {
+            $ko = "tidak";
+            $produk['pinjam'] = $ko;
+        }
+
+        $produk['nama_produk'] = Str::title($request->input('nama_produk'));
+        $produk['kode_produk'] = strtoupper($request->input('kode_produk'));
+        $produk['kategori_id'] = $request->input('kategori_produk');
+        $produk['pinjam'] = $request->input('pinjam');
+
+        // dd($produk);
+        Produk::create($produk);
+
+        if (!$request) {
+            toast('Produk gagal disimpan', 'error')->autoClose(1500);
+            return redirect()->route('produk.create');
+        } else {
+            toast('Produk Berhasil disimpan', 'success')->autoClose(1500);
+            return redirect()->route('produk.index');
+        }
+
+        return view('admin.produk.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Pinjam  $pinjam
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Pinjam $pinjam)
+    public function show($id)
     {
-        //
+        $produk = Produk::findOrFail($id);
+        return view('admin.produk.show', compact('produk'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Pinjam  $pinjam
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        $pinjam = Pinjam::findOrFail($id);
-        $produks = Produk::orderBy('nama_produk')->get();
-        return view('admin.peminjaman.edit', compact('pinjam', 'produks'));
+        $produk = Pinjam::findOrFail($id);
+        $produkId = $produk->produk->id;
+        // $out = StokOut::where('produk_id', $produkId)->first();
+        $kategoris = Kategori::orderBy('nama_kategori')->get();
+        return view('admin.produk.edit', compact('produk', 'kategoris'));
+
+        // dd($produk);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Pinjam  $pinjam
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
-    {
-        $pinjam = Pinjam::findOrFail($id);
-        try {
-            $produk = Produk::findOrFail($request->produk_id);
-            $produk->qty += 1;
-            $produk->update();
-        } catch (Excepion $e) {
-            return redirect()->route('peminjaman.edit').$e->message();
-        }
-        $request->validate(
-            [
-                'produk_id' => 'required',
-                'kode_pinjam' => 'required',
-                'peminjam' => 'required',
-                'jumlah' => 'required',
-                'kondisi_pinjam' => 'required',
-                'tgl_pinjam' => 'required',
-            ]
-        );
+    {try {
+        $produk = Pinjam::findOrFail($id);
+        $produkId = $produk->produk->id;
+        $in = Produk::where('id', $produkId)->first();
 
-        $pro = Produk::findOrFail($request->produk_id);
-        $pro->qty -= 1;
-        $pro->update();
+        if ($request->pinjam == "Disetujui") {
+            $in->update([
+                'qty' =>  $in->qty - $request->jumlah_barang
+            ]);
+            $produk->update([
+                'kondisi_kembali' => $request->kondisi_kembali,
+                'tgl_kembali' => date('Y-m-d H:i:s'),
+                'status' => $request->pinjam,
+            ]);
 
-        $st = "Dipinjam";
-
-        $pinjam->update(
-            [
-                'produk_id' => $request->input('produk_id'),
-                'kode_pinjam' => strtoupper($request->input('kode_pinjam')),
-                'peminjam' => Str::title($request->input('peminjam')),
-                'jumlah' => $request->input('jumlah'),
-                'kondisi_pinjam' => $request->input('kondisi_pinjam'),
-                'tgl_pinjam' => $request->input('tgl_pinjam'),
-                // 'kondisi_kembali' => $request->input('kondisi_kembali'),
-                // 'tgl_kembali' => $request->input('tgl_kembali'),
-                'status' => $st,
-            ]
-        );
-
-        if(!$request) {
-            toast('Peminjaman gagal diupdate', 'error')->autoClose(1500);
+            // StokOut::create([
+            //     'qty' => $request->jumlah_barang,
+            //     'nama_produk' => $request->nama_produk,
+            //     'pemohon' => $request->nama_peminjam,
+            //     'keterangan' => $request->kondisi_kembali
+            // ]);
+            toast('Produk Berhasil disimpan', 'success')->autoClose(1500);
             return redirect()->route('peminjaman.index');
-        } else {
-            toast('Peinjaman berhasil diupdate', 'success')->autoClose(1500);
+
+        }else if($request->pinjam == "Dikembalikan"){
+            $in->update([
+                'qty' =>  $in->qty + $request->jumlah_barang
+            ]);
+            $produk->update([
+                'kondisi_kembali' => $request->kondisi_kembali,
+                'tgl_kembali' => date('Y-m-d H:i:s'),
+                'status' => $request->pinjam,
+            ]);
+            toast('Produk Berhasil disimpan', 'success')->autoClose(1500);
             return redirect()->route('peminjaman.index');
         }
+        else {
+            $produk->update([
+                'kondisi_kembali' => $request->kondisi_kembali,
+                'tgl_kembali' => date('Y-m-d H:i:s'),
+                'status' => $request->pinjam,
+            ]);
+            toast('Produk Berhasil disimpan', 'success')->autoClose(1500);
+            return redirect()->route('peminjaman.index');
+        }
+    } catch (\Exception $e) {
+        // Tangani pengecualian di sini
+        toast('Terjadi kesalahan: ' . $e->getMessage(), 'error')->autoClose(5000);
+        return redirect()->route('peminjaman.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Pinjam  $pinjam
-     * @return \Illuminate\Http\Response
-     */
+    }
+
     public function destroy($id)
     {
-        $pinjam = Pinjam::findOrFail($id);
-        $produk = $pinjam->produk;
-
-        if (($produk->qty - $pinjam->jumlah) < 0) {
-            toast('Maaf Stok Anda Nanti Minus', 'error')->autoclose(1500);
-            return redirect()->route('stokIn.index');
-        } elseif($produk->qty > 0) {
-            $produk->qty += $pinjam->jumlah;
-            $produk->save();
-
+        try {
+            $pinjam = Pinjam::findOrFail($id);
             $pinjam->delete();
-
-            toast('Peminjaman Berhasil Dihapus', 'success')->autoClose(1500);
+            toast('Berhasil Dihapus', 'success')->autoClose(1500);
             return redirect()->route('peminjaman.index');
-        } elseif($produk->qty == 0){
-            $produk->qty -= 0;
-            $produk->save();
-
-            $pinjam->delete();
-
-            toast('Peminjaman Berhasil Dihapus', 'success')->autoClose(1500);
+        }  catch (\Exception $e) {
+            // Tangani pengecualian di sini
+            toast('Terjadi kesalahan: ' . $e->getMessage(), 'error')->autoClose(5000);
             return redirect()->route('peminjaman.index');
         }
+
+
     }
 
-    public function pengembalianEdit($id)
+    public function exportExcel()
     {
-        $pinjam = Pinjam::findOrFail($id);
-        $produks = Produk::orderBy('nama_produk')->get();
-        return view('admin.pengembalian.edit', compact('pinjam', 'produks'));
+        return Excel::download(new DetailProdukExport, 'detail_produk.xlsx');
+        // return (new StockExport ($this->selected))->download('barang_masuk.xlsx');
     }
 
-    public function pengembalian(Request $request, $id) {
-        $pinjam = Pinjam::findOrFail($id);
-        $produk = Produk::findOrFail($request->produk_id);
-        $request->validate(
-            [
-                // 'produk_id' => 'required',
-                'kode_pinjam' => 'required',
-                'peminjam' => 'required',
-                'jumlah' => 'required',
-                'kondisi_kembali' => 'required',
-                'tgl_kembali' => 'required',
-            ]
-        );
-
-
-        $st = "Dikembalikan";
-
-        // dd($pinjam);
-
-        $pinjam->update(
-            [
-                // 'produk_id' => $request->input('produk_id'),
-                'kode_pinjam' => strtoupper($request->input('kode_pinjam')),
-                'peminjam' => Str::title($request->input('peminjam')),
-                'jumlah' => $request->input('jumlah'),
-                'kondisi_pinjam' => $request->input('kondisi_pinjam'),
-                // 'tgl_pinjam' => $request->input('tgl_pinjam'),
-                'kondisi_kembali' => $request->input('kondisi_kembali'),
-                'tgl_kembali' => $request->input('tgl_kembali'),
-                'status' => $st,
-            ]
-        );
-
-        $pro = Produk::findOrFail($request->produk_id);
-        $pro->qty += 1;
-        $pro->update();
-
-        if(!$request) {
-            toast('Peminjaman gagal diupdate', 'error')->autoClose(1500);
-            return redirect()->route('peminjaman.index');
-        } else {
-            toast('Peinjaman berhasil diupdate', 'success')->autoClose(1500);
-            return redirect()->route('peminjaman.index');
-        }
-    }
-
-    public function pengembalianIndex()
+    public function exportPdf()
     {
-        $pinjams = Pinjam::paginate(10);
-        $produks = Produk::orderBy('nama_produk')->get();
-        $produk = Produk::orderBy('nama_produk')->get();
-        return view('admin.pengembalian.index', compact('pinjams', 'produk', 'produks'))->with('no', 1);
+        $datas = Produk::all();
+        view()->share('datas', $datas);
+        $pdf = PDF::loadview('admin.stokIn.export-pdf');
+        return $pdf->download('barang_masuk.pdf');
+        return view('admin.stokIn.export-pdf', compact('datas'))->with('no', 1);
     }
 }

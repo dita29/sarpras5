@@ -14,9 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('stok_outs', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('produk_id');
-            $table->foreign('produk_id')->references('id')->on('produks')->onDelete('cascade');
+            $table->string('nama_produk', 100)->nullable();
             $table->integer('qty')->nullable();
             $table->string('pemohon', 100)->nullable();
             $table->string('keterangan', 100)->nullable()->default('Tanpa Keterangan');

@@ -11,17 +11,17 @@
 </head>
 
 <body>
+    <div class="container-fluid bg-danger text-center py-2 text-white">Riwayat Transaksi</div>
     <table class="table">
         <thead class="thead-light">
             <tr>
                 <th scope="col">No</th>
-                <th scope="col">Nama Produk</th>
-                <th scope="col">Penempatan</th>
-                <th scope="col">Merek</th>
-                <th scope="col">Harga Beli</th>
-                <th scope="col">Tanggal Pembelian</th>
-                <th scope="col">Jumlah Barang<br>Masuk</th>
-                <th scope="col">Tanggal Barang<br>Masuk</th>
+                <th scope="col">Nama Barang</th>
+                <th scope="col">Jumlah Produk Keluar</th>
+                <th scope="col">Tanggal Keluar</th>
+                <th scope="col">Pemohon</th>
+                <th scope="col">Status</th>
+                <th scope="col">Keterangan</th>
             </tr>
         </thead>
         <tbody>
@@ -29,16 +29,26 @@
                 <tr>
                     <th scope="row">{{ $loop->iteration }}</th>
                     <td>{{ $data->produk->nama_produk }}</td>
-                    <td>{{ $data->tempat->nama_tempat }}</td>
-                    <td>{{ $data->merk }}</td>
-                    <td>Rp. {{ number_format($data->harga_beli, 0, ',', '.') }}</td>
-                    <td>{{ optional($data->tgl_beli)->isoFormat('dddd, DD MMMM Y') }}</td>
-                    <td>{{ $data->qty }}</td>
-                    <td>{{ optional($data->created_at)->isoFormat('dddd, DD MMMM Y') }}</td>
+                    <td>{{ $data->jumlah }}</td>
+                    <td>{{ $data->tgl_pinjam->format('d-m-Y')}}</td>
+                    <td>{{  $data->peminjam }}</td>
+                    <td>{{  $data->status }}</td>
+                    <td>{{  $data->kondisi_pinjam }}</td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+    <div class="d-flex flex-row-reverse" style="padding-right: 15px; width: 100%;">
+        <div style="margin: 10px; text-align:right">
+             {{ optional(now())->isoFormat('dddd, DD MMMM Y') }}
+        </div>
+        <div style="margin: 10px; text-align:right; margin-bottom: 55px">
+            Administrator Sarana Prasarana
+        </div>
+        <div style="margin: 10px; text-align:right;  padding-right: 25px;">
+            Andri Prasetyo
+        </div>
+    </div>
 </body>
 
 </html>

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Produk;
 use App\Models\StokIn;
-use App\Models\StokOut;
+use App\Models\Pinjam;
 use App\Exports\ProdukExport;
 use Maatwebsite\Excel\Facades\Excel;
 use PDF;

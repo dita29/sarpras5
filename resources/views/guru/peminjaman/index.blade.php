@@ -1,21 +1,19 @@
-@extends('layouts.master')
+@extends('layouts.gurumaster')
 
-@section('tab-title', 'Produk | Admin')
+@section('tab-title', 'Produk | Guru')
 @section('page-title', 'Produk')
 @section('contents')
     <div class="row">
         <div class="col">
             <div class="card border-0 shadow rounded">
                 <div class="card-header">
-                    <h4 class="card-title">Tambah Barang</h4>
+                    <h4 class="card-title">Data Pinjaman Anda</h4>
                 </div>
                 <div class="card-body">
                     <form action="#">
                         <div class="row">
                             <div class="col">
-                                <a href="{{ route('produk.create') }}" class="btn btn-success">Tambah Barang</a>
-                                <a href="{{ route('produk.export') }}" class="btn btn-success">Export Excel</a>
-
+                                <a href="{{ route('peminjamanguru.create') }}" class="btn btn-success">Pinjam Barang</a>
                             </div>
                             {{-- <div class="col-auto">
                                 <input type="text" name="keyword" id="keyword" class="form-control"
@@ -37,34 +35,27 @@
                                 <th scope="col">Gambar</th>
                                 <th scope="col">Kode Barang</th>
                                 <th scope="col">Nama Barang</th>
-                                <th scope="col">Kategori</th>
-                                <th style="width: 150px" scope="col">Opsi</th>
+                                <th scope="col">Jumlah Pinjam (pcs)</th>
+                                <th scope="col">Status</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($produks as $produk)
+                            <?php $no=1?>
+                            @forelse ($pinjams as $pinjam)
                                 <tr>
                                     <td>{{ $no++ }}</td>
                                     <td class="text-center">
-                                        <img src="{{Storage::url('produk/').$produk->foto_produk}}"
+                                        <img src="{{Storage::url('produk/').$pinjam->produk->foto_produk}}"
                                             class="card-img img-thumbnails" style="max-height: 150px; max-width: 150px; overflow-x: hidden; overflow-y: hidden">
                                     </td>
-                                    <td>{{ $produk->kode_produk }}</td>
-                                    <td>{{ $produk->nama_produk }}</td>
-                                    <td>{{ $produk->kategori->nama_kategori }}</td>
-                                    <td>
-                                        <form action="{{ route('produk.destroy', $produk->id) }}" method="POST">
-                                            {{-- <a href="{{ route('produk.show', $produk->id) }}" class="btn btn-sm btn-secondary">Detail</a> --}}
-                                            <a href="{{ route('produk.edit', $produk->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger btn-flat show-alert-delete-box btn-sm btn-delete">Hapus</button>
-                                        </form>
-                                    </td>
+                                    <td>{{ $pinjam->produk->kode_produk }}</td>
+                                    <td>{{ $pinjam->produk->nama_produk }}</td>
+                                    <td>{{ $pinjam->jumlah }}</td>
+                                    <td>{{ $pinjam->status }}</td>
                                 </tr>
                             @empty
                                 <div class="alert alert-danger">
-                                    Barang belum Tersedia.
+                                    Anda Belum Meminjam Barang.
                                 </div>
                             @endforelse
                         </tbody>
@@ -73,9 +64,9 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex mt-2">
+        {{-- <div class="d-flex mt-2">
             {!! $produks->links() !!}
-        </div>
+        </div> --}}
     </div>
     <script>
         @if (session()->has('success'))

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\StokOut;
+use App\Models\Pinjam;
 use App\Models\Produk;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -18,7 +18,7 @@ class StokOutController extends Controller
      */
     public function index()
     {
-        $stokOuts = StokOut::paginate(10);
+        $stokOuts = Pinjam::paginate(10);
         $produk = Produk::orderBy('nama_produk')->get();
         return view('admin.stokOut.index', compact('produk', 'stokOuts'))->with('no', 1);
     }
@@ -33,7 +33,7 @@ class StokOutController extends Controller
 
         $produks = Produk::orderBy('kategori_id', 'asc')
             ->where('qty', '>', 0)
-            ->whereIn('pinjam', ['tidak'])
+            ->whereIn('pinjam', ['ya'])
             ->get();
         return view('admin.stokOut.create', compact('produks'));
     }
@@ -195,20 +195,9 @@ class StokOutController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $stokOut = StokOut::findOrFail($id);
-        $produk = $stokOut->produk;
-
-        if($produk->qty >= 0){
-            $produk->qty += $stokOut->qty;
-            $produk->save();
-        } else {
-            toast('Maaf Terjadi Kesalaan', 'error')->autoclose(1500);
-            return redirect()->route('stokOut.index');
-        }
-
+        $stokOut = Pinjam::findOrFail($id);
         $stokOut->delete();
-
-        toast('Stok Berhasil Dihapus', 'success')->autoClose(1500);
+        toast('Berhasil Dihapus', 'success')->autoClose(1500);
         return redirect()->route('stokOut.index');
     }
 
@@ -220,9 +209,9 @@ class StokOutController extends Controller
 
     public function exportPdf()
     {
-        $datas = StokOut::all();
+        $datas = Pinjam::all();
         view()->share('datas', $datas);
-        $pdf = PDF::loadview('admin.stokIn.export-pdf');
+        $pdf = PDF::loadview('admin.stokOut.export-pdf');
         return $pdf->download('barang_keluar.pdf');
         // return view('admin.stokIn.export-pdf', compact('datas'))->with('no', 1);
     }

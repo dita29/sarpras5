@@ -49,7 +49,7 @@
 
                     <div class="col-md-6">
                         <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
+                        <h6 class="text-danger mt-2" id="removable">Password Minimal 8 Karakter !!</h6>
                         @error('password')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -59,7 +59,7 @@
                 </div>
                 <div class="row mb-0">
                     <div class="col-md-8 offset-md-4">
-                        <button type="submit" class="btn btn-primary col-md-9">
+                        <button type="submit" class="btn col-md-9 disabled btn-danger" id="btn-register">
                             {{ __('Register') }}
                         </button>
 
@@ -73,8 +73,8 @@
             </form>
                 <div style="display: flex; width: 100%; justify-content: center; align-items: center;">
                 <div style="width: fit-content; margin-top: 10px">
-                    <h4>Sudah Punya Akun? <a href="/login">Login</a></h4>    
-                </div>    
+                    <h4>Sudah Punya Akun? <a href="/login">Login</a></h4>
+                </div>
                 </div>
         </main>
     </div>
@@ -82,6 +82,22 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
+</script>
+<script>
+    let pass = document.querySelector('#password');
+    pass.addEventListener("input", function () {
+        let totalInput = pass.value.length;
+        if(totalInput >= 8) {
+            document.querySelector('#removable').classList.add('d-none');
+            document.querySelector('#btn-register').classList.add('btn-primary');
+            document.querySelector('#btn-register').classList.remove('disabled', 'btn-danger');
+        } else {
+            document.querySelector('#btn-register').classList.add('disabled', 'btn-danger');
+            document.querySelector('#btn-register').classList.remove('btn-primary');
+            document.querySelector('#removable').classList.remove('d-none');
+        }
+        console.log(totalInput);
+    });
 </script>
 
 {{-- <div class="container">

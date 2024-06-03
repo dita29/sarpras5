@@ -17,63 +17,49 @@
                         <div class="row">
                             <div class="col">
                                 <div class="form-group mb-3">
-                                    @if ($errors->any())
-                                        <div class="alert alert-danger">
-                                            <ul>
-                                                @foreach ($errors->all() as $error)
-                                                    <li>{{ $error }}</li>
-                                                @endforeach
-                                            </ul>
+                                    <label for="kode_pinjam" class="form-label">Kode Peminjaman</label>
+                                    <input type="text" id="kode_pinjam" name="kode_pinjam"
+                                    readonly
+                                        style="text-transform: capitalize"
+                                        value="{{ old('status', $pinjam->id) }}"
+                                        class="form-control @error('kode_pinjam') is-invalid @enderror" autofocus />
+                                    @if ($errors->has('kode_pinjam'))
+                                        <div class="alert alert-danger mt-2">
+                                            <span class="text-danger mt-1">{{ $errors->first('kode_pinjam') }}</span>
                                         </div>
                                     @endif
-                                    @if ($message = Session::get('error'))
-                                        <div class="alert alert-danger alert-block">
-                                            <p>{{ $message }}</p>
-                                        </div>
-                                    @endif
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="produk_id" class="form-label">Nama Produk</label>
-                                    <select name="produk_id" id="produk_id" class="form-select"
-                                        @error('produk_id') is-invalid @enderror autofocus>
-                                        <option value="">Pilih Produk</option>
-                                        @foreach ($produks as $produk)
-                                            <option value="{{ $produk->id }}"
-                                                @if ($pinjam->produk_id == $produk->id) selected @endif>{{ $produk->nama_produk }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="kode_pinjam" class="form-label">Kode Pinjam</label>
-                                    <input type="text" id="kode_pinjam" name="kode_pinjam" class="form-control"
-                                        @error('kode_pinjam') is-invalid @enderror
-                                        style="text-transform: uppercase"
-                                        value="{{ old('kode_pinjam', $pinjam->kode_pinjam) }}" />
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="peminjam" class="form-label">Peminjam</label>
-                                    <input type="text" id="peminjam" name="peminjam" class="form-control"
-                                        @error('peminjam') is-invalid @enderror
-                                        value="{{ old('peminjam', $pinjam->peminjam) }}" />
+                                    <input type="text" id="peminjam" name="peminjam"
+                                    readonly
+                                        style="text-transform: capitalize"
+                                        value="{{ old('status', $pinjam->peminjam) }}"
+                                        class="form-control @error('peminjam') is-invalid @enderror" autofocus />
+                                    @if ($errors->has('peminjam'))
+                                        <div class="alert alert-danger mt-2">
+                                            <span class="text-danger mt-1">{{ $errors->first('peminjam') }}</span>
+                                        </div>
+                                    @endif
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label for="jumlah" class="form-label">Jumlah</label>
-                                    <input type="text" id="jumlah" name="jumlah" class="form-control"
-                                        @error('jumlah') is-invalid @enderror
-                                        value="{{ old('jumlah', $pinjam->jumlah) }}" readonly/>
+                                    <label for="tgl_kembali" class="form-label">Tanggal Pengembalian</label>
+                                    <input type="date" id="tgl_kembali" name="tgl_kembali"
+                                        class="form-control @error('tgl_kembali') is-invalid @enderror"
+                                        value="{{ old('tgl_kembali', optional($pinjam->tgl_kembali)->isoFormat('DD/MM/YYYY')) }}" />
+                                    @if ($errors->has('tgl_kembali'))
+                                        <div class="alert alert-danger mt-2">
+                                            <span class="text-danger mt-1">{{ $errors->first('tgl_kembali') }}</span>
+                                        </div>
+                                    @endif
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label for="kondisi_pinjam" class="form-label">Kondisi</label>
-                                    <input type="text" id="kondisi_pinjam" name="kondisi_pinjam"
-                                        class="form-control @error('kondisi_pinjam') is-invalid @enderror"
-                                        value="{{ old('kondisi_pinjam', $pinjam->kondisi_pinjam) }}" />
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="tgl_pinjam" class="form-label">Tanggal Pinjam</label>
-                                    <input type="date" id="tgl_pinjam" name="tgl_pinjam"
-                                        class="form-control @error('tgl_pinjam') is-invalid @enderror"
-                                        value="{{ old('tgl_oinjam', $pinjam->tgl_pinjam) }}" />
+                                    <label for="status" class="form-label">Status Verifikasi</label>
+                                    <select name="status" id="status" class="form-select">
+                                        <option value="kosong">Pilih Verifikasi</option>
+                                        <option value="Disetujui">Ditolak</option>
+                                        <option value="Ditolak">Disetujui</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -83,7 +69,7 @@
                     <div class="card-footer">
                         <a href="{{ route('peminjaman.index') }}" name="kembali" class="btn btn-danger" id="back"><i
                                 class='nav-icon fas fa-arrow-left'></i> &nbsp; Kembali</a> &nbsp;
-                        <button name="submit" class="btn btn-primary"><i class="nav-icon fas fa-save"></i> &nbsp;
+                        <button name="submit" class="btn btn-primary" type="submit"><i class="nav-icon fas fa-save"></i> &nbsp;
                             Tambahkan</button>
                     </div>
                 </form>

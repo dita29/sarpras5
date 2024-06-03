@@ -33,10 +33,10 @@
                                     @endif
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label for="produk_id" class="form-label">Nama Produk</label>
+                                    <label for="produk_id" class="form-label">Nama Barang</label>
                                     <select name="produk_id" id="produk_id" class="form-select"
                                         @error('produk_id') is-invalid @enderror autofocus>
-                                        <option value="" selected>Pilih Produk</option>
+                                        <option value="" selected>Pilih Barang</option>
                                         @foreach ($produks as $produk)
                                             <option value="{{ $produk->id }}">{{ $produk->nama_produk }}</option>
                                         @endforeach

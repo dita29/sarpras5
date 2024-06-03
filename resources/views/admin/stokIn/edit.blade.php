@@ -17,10 +17,10 @@
                         <div class="row">
                             <div class="col">
                                 <div class="form-group mb-3">
-                                    <label for="produk_id" class="form-label">Nama Produk</label>
+                                    <label for="produk_id" class="form-label">Nama Barang</label>
                                     <select class="form-select @error('produk_id') is-invalid @enderror" id="produk_id"
                                         name="produk_id" autofocus>
-                                        <option value="">Pilih Nama Produk</option>
+                                        <option value="">Pilih Nama Barang</option>
                                         @foreach ($produks as $produk)
                                             <option value="{{ $produk->id }}"
                                                 @if ($stokIn->produk_id == $produk->id) selected @endif>

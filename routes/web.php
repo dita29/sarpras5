@@ -15,6 +15,7 @@ use App\Http\Controllers\RedirectController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GuruDashboardController;
+use App\Http\Controllers\PeminjamanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -90,6 +91,12 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'checkrole:admin']]
 
 Route::group(['prefix' => '/guru', 'middleware' => ['auth', 'checkrole:user']], function(){
     Route::get('dashboard', [GuruDashboardController::class, 'index'])->name('dashboard.index');
+    Route::resource('peminjamanguru', PeminjamanController::class);
+
+    Route::prefix('pinjam')->group(function () {
+        Route::get('/export-excel', [PeminjamanController::class, 'exportExcel'])->name('pinjam.export');
+        Route::get('/export-pdf', [PeminjamanController::class, 'exportPdf'])->name('pinjam.exportPdf');
+    });
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
